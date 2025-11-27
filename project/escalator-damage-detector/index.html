@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <title>Escalator Damage Detector | eden-owo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    body {
+      background: #020617; /* slate-950 */
+      color: #e5e7eb;
+      -webkit-font-smoothing: antialiased;
+    }
+    .preview-image {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: brightness(0.6);
+    }
+    .arrow-btn {
+      width: 42px;
+      height: 42px;
+      backdrop-filter: blur(10px);
+      background: rgba(15, 23, 42, 0.85);
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+    .arrow-btn:hover {
+      background: rgba(30, 64, 175, 0.9);
+      border-color: rgba(56, 189, 248, 0.8);
+    }
+  </style>
+</head>
+
+<body class="min-h-screen">
+
+<!-- Top bar (簡單 Logo + 返回連結) -->
+<header class="border-b border-slate-800 bg-slate-950/80 backdrop-blur">
+  <div class="mx-auto max-w-6xl px-4 py-3 flex items-center justify-between">
+    <div class="flex items-center gap-2">
+      <div class="h-7 w-7 rounded-full bg-gradient-to-tr from-sky-500 to-fuchsia-500 flex items-center justify-center text-xs font-bold">
+        Wu
+      </div>
+      <span class="text-sm font-semibold tracking-wide text-slate-100">
+        eden-owo
+      </span>
+    </div>
+    <a href="#projects" class="hidden sm:inline text-xs text-slate-400 hover:text-sky-300">
+      ← Back to projects
+    </a>
+  </div>
+</header>
+
+<main class="mx-auto max-w-6xl px-4 pb-16">
+
+  <!-- ───────────────────────────
+       HERO PREVIEW + SLIDE ARROWS
+  ──────────────────────────── -->
+<section class="pt-6 pb-10">
+  <div class="rounded-xl border border-slate-800 overflow-hidden bg-slate-900/80 relative">
+
+    <!-- 用 flex + 固定高度，左右 75% / 25% -->
+    <div class="flex h-[520px]">
+
+      <!-- 左側 80%：沿用原本 preview 區 -->
+      <div class="relative flex-[3] overflow-hidden">
+        <!-- ❗ 把 preview-image 的 class 拿掉，避免奇怪定位 -->
+        <img id="preview-image"
+             src="./assets/slide1.png"
+             alt="Escalator safety preview"
+             class="w-full h-full object-cover brightness-80" />
+
+        <!-- 右側上下箭頭 -->
+        <div class="absolute right-5 top-1/2 -translate-y-1/2 flex flex-col gap-3">
+          <button id="btn-up" class="arrow-btn text-slate-100 text-lg" aria-label="上一個畫面">↑</button>
+          <button id="btn-down" class="arrow-btn text-slate-100 text-lg" aria-label="下一個畫面">↓</button>
+        </div>
+      </div>
+
+      <!-- 右側 25%：影片區，跟下方卡片同高 -->
+      <div class="flex-[1] border-l border-slate-800 bg-slate-950 flex items-center justify-center">
+        <video
+          id="fall-video"
+          src="./assets/result_falling_h264.mp4"   
+          autoplay
+          muted
+          loop
+          playsinline
+          controls
+          class="w-full h-full object-cover rounded-none">
+          您的瀏覽器不支援 HTML5 影片。
+        </video>
+      </div>
+      <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const video = document.getElementById("fall-video");
+        const btnUp = document.getElementById("btn-up");
+        const btnDown = document.getElementById("btn-down");
+
+        // 兩段影片來源
+        const videos = [
+          "./assets/result_falling_h264.mp4",
+          "./assets/result_esc_h264.mp4"
+        ];
+
+        let index = 0;
+
+        // 播放指定影片
+        function playVideo(i) {
+          index = i;
+
+          video.src = videos[index];
+          video.muted = true;
+          video.loop = true;
+          video.autoplay = true;
+          
+          // 重要：切換來源後要再次 play()
+          video.play().catch(err => console.warn("Autoplay blocked:", err));
+        }
+
+        // 初始播放第一段
+        playVideo(0);
+
+        // 上鍵：播放上一段（或繞回）
+        btnUp.addEventListener("click", () => {
+          const next = (index - 1 + videos.length) % videos.length;
+          playVideo(next);
+        });
+
+        // 下鍵：播放下一段
+        btnDown.addEventListener("click", () => {
+          const next = (index + 1) % videos.length;
+          playVideo(next);
+        });
+      });
+      </script>
+
+    </div>
+  </div>
+</section>
+
+
+
+
+  <!-- ───────────────────────────
+       MAIN CONTENT（左說明 / 右卡片）
+  ──────────────────────────── -->
+  <section class="grid gap-10 lg:grid-cols-[minmax(0,1.4fr),minmax(260px,0.9fr)] items-start">
+      <!-- 左側：痛點 + 簡要說明 -->
+      <div class="space-y-6">
+          <div class="space-y-2">
+              <h1 class="text-3xl font-semibold text-slate-50">
+                  Escalator Damage Detector
+              </h1>
+              <h2 class="text-base font-semibold text-slate-50">手扶梯危險偵測系統（DeepStream + YOLO-Pose / Seg + MQTT）</h2>
+              <ul class="list-disc pl-5 text-sm text-slate-300 space-y-1">
+                <li>YOLO-Pose Skeleton & Segmentation Tracking ​& MQTT Event Messaging </li>
+                <li>OpenCV Perspective Correction ​& Detection-Zone Alignment​ </li>
+              </ul>
+          </div>
+
+          <div class="space-y-3">
+              <h2 class="text-base font-semibold text-slate-50">專案背景</h2>
+              <div class="text-sm text-slate-300 space-y-1">
+                  <p>在大型車站與商場中，跌倒事故與行李掉落是最常見的手扶梯意外原因。</p>
+                  <p>人工監視容易疲乏、視角有限，也無法在第一時間回報事件。</p>
+                  <p>因此設計了一套
+                     <span class="font-semibold text-sky-300">多流、低延遲、可邊緣部署的手扶梯危害偵測系統</span>
+                     ，可自動偵測並回傳跌倒姿勢、行李滾落與異常物體，並在 0.1–0.3 秒內推送 MQTT JSON 警示。
+                  </p>
+              </div>
+            </div>
+
+          <div class="space-y-3">
+              <h2 class="text-base font-semibold text-slate-50">場域需求</h2>
+              <ul class="list-disc pl-5 text-sm text-slate-300 space-y-1">
+                  <li>監視器數量龐大，跌倒姿勢變化快速，人工監看容易漏掉關鍵事故畫面。</li>
+                  <li>跌倒與行李掉落發生在1–2 秒內，容易導致二次傷害。</li>
+                  <li>傳統偵測多以區域入侵或簡單位移判斷，難以理解「姿勢」與「動作」。</li>
+                  <li>手扶梯傾斜與視角差異，影響視覺辨識導致誤判。</li>
+              </ul>
+          </div>
+
+          <div class="space-y-3">
+              <h2 class="text-base font-semibold text-slate-50">問題解決</h2>
+              <ul class="list-disc pl-5 text-sm text-slate-300 space-y-1">
+                  <li>觀測視角不固定 → 透視校正改善感測距離誤差</li>
+                  <li>單一系統多需求 → DeepStream 串接 Pose + Segmentation</li>
+                  <li>即時事件低延遲 → 低延遲、高 FPS 的推論架構</li>
+                  <li>多路影像同時處理 → DeepStream pipeline 多路穩定性</li>
+                  <li>RTSP 多路流   → 一台 Jetson 就能跑多個手扶梯</li>
+                  <li>Edge AI 部署  → 獨立運作，不依賴雲端，延遲小、可靠度高</li>
+              </ul>
+          </div>
+
+          <div class="space-y-3">
+              <h2 class="text-base font-semibold text-slate-50">主導系統技術</h2>
+              <ul class="grid gap-3 text-sm text-slate-300 sm:grid-cols-2">
+                  <li class="rounded-xl border border-slate-800 bg-slate-900/70 px-4 py-3">
+                      <div class="text-s font-semibold text-emerald-300 tracking-wide mb-1">
+                          Skeleton-based Detection
+                      </div>
+                      透過 YOLO-Pose 分析骨架關節角度，辨識跌倒、翻滾等異常姿勢。
+                  </li>
+                  <li class="rounded-xl border border-slate-800 bg-slate-900/70 px-4 py-3">
+                      <div class="text-s font-semibold text-sky-300 tracking-wide mb-1">
+                          Multi-stream Inference
+                      </div>
+                      DeepStream Pipeline 同步解析多路 RTSP 串流，集中管理多台監視器，並行 Pose / Seg / Tracking。
+                  </li>
+                  <li class="rounded-xl border border-slate-800 bg-slate-900/70 px-4 py-3">
+                      <div class="text-s font-semibold text-fuchsia-300 tracking-wide mb-1">
+                          Real-time Alerts
+                      </div>
+                      以 MQTT 發送事件 JSON，包含時間、座標、物件 ID、姿態資訊，可與既有監控系統串接。
+                  </li>
+                  <li class="rounded-xl border border-slate-800 bg-slate-900/70 px-4 py-3">
+                      <div class="text-s font-semibold text-amber-300 tracking-wide mb-1">
+                          Edge Deployment
+                      </div>
+                      以 TensorRT 加速推論，在 Jetson / GPU 上維持高 FPS 與低延遲。
+                  </li>
+              </ul>
+          </div>
+      </div>
+
+<div class="rounded-2xl bg-slate-900/60 border border-slate-800 p-6 space-y-6">
+
+    <div class="text-xs tracking-widest text-slate-400 mb-1">PROJECT</div>
+
+    <div>
+        <h3 class="text-xl font-semibold text-slate-50">Escalator Damage Detector</h3>
+        <p class="text-sm text-slate-300 mt-1 leading-relaxed">
+            整合
+            <span class="font-semibold text-sky-300">NVIDIA DeepStream、YOLO-Pose、Segment、TensorRT、MQTT</span>
+            ，支援多人多物件追蹤、跌倒偵測、行李掉落追蹤與即時事件推送。
+        </p>
+    </div>
+
+    <!-- ✨ 新增：Repository 小標題 -->
+    <div class="text-xs tracking-widest text-slate-400">REPOSITORIES</div>
+
+    <!-- GitHub QR Codes -->
+    <div class="grid grid-cols-2 gap-4">
+
+        <!-- DeepStream Repo -->
+        <a href="https://github.com/eden-owo/DS-Escalator-Damage-Detector" 
+          target="_blank"
+          class="flex flex-col items-center rounded-xl border border-slate-700 bg-slate-800/60 p-4 hover:border-sky-400 transition-colors">
+          <img src="./assets/DS-Escalator-Damage-Detector.png" alt="DeepStream Repo QR" class="w-28 h-28 rounded-lg">
+          <div class="mt-2 text-sm text-slate-200 font-semibold text-center">
+            GitHub<br>（DeepStream）
+          </div>
+        </a>
+
+        <!-- Python Repo -->
+        <a href="https://github.com/eden-owo/Person-suitcase-motion-tracker" 
+          target="_blank"
+          class="flex flex-col items-center rounded-xl border border-slate-700 bg-slate-800/60 p-4 hover:border-fuchsia-400 transition-colors">
+          <img src="./assets/Person-suitcase-motion-tracker.png" alt="Python Repo QR" class="w-28 h-28 rounded-lg">
+          <div class="mt-2 text-sm text-slate-200 font-semibold text-center">
+            GitHub<br>（Python）
+          </div>
+        </a>
+
+    </div>
+
+    <!-- 技術標籤 -->
+    <div class="flex flex-wrap gap-2 pt-2">
+        <span class="px-3 py-1 rounded-lg bg-slate-800 text-slate-300 text-xs">DeepStream</span>
+        <span class="px-3 py-1 rounded-lg bg-slate-800 text-slate-300 text-xs">YOLO-Pose</span>
+        <span class="px-3 py-1 rounded-lg bg-slate-800 text-slate-300 text-xs">YOLO-Seg</span>
+        <span class="px-3 py-1 rounded-lg bg-slate-800 text-slate-300 text-xs">TensorRT</span>
+        <span class="px-3 py-1 rounded-lg bg-slate-800 text-slate-300 text-xs">MQTT</span>
+    </div>
+
+</div>
+
+  </section>
+  <section class="mt-8 rounded-3xl border border-slate-800 bg-slate-900/80 px-6 py-8">
+  <h2 class="text-base font-semibold text-slate-50 mb-4">System Architecture</h2>
+
+  <p class="text-sm text-slate-300 mb-4">
+      NVIDIA DeepStream 多分支推論架構，整合 Pose 與 Detection 兩條 Branch，並透過 OSD 即時顯示與 MQTT 推送即時事件。
+  </p>
+
+  <img src="./assets/DS_Arch.png"
+        alt="System Architecture"
+        class="rounded-xl border border-slate-800 w-full" />
+  </section>
+
+
+</main>
+
+<script>
+  // ──────────────────────────────
+  // 多張預覽圖 + 文案，使用上下箭頭切換
+  // ──────────────────────────────
+  const slides = [
+    {
+      src: "./assets/slide1.png",
+    },
+    {
+      src: "./assets/slide2.png",
+    },
+  ];
+
+  let current = 0;
+  const imgEl = document.getElementById("preview-image");
+  const titleEl = document.getElementById("preview-title");
+  const captionEl = document.getElementById("preview-caption");
+
+  function renderSlide(index) {
+    const s = slides[index];
+    imgEl.src = s.src;
+    imgEl.alt = s.title;
+    titleEl.textContent = s.title;
+    captionEl.textContent = s.caption;
+  }
+
+  document.getElementById("btn-up").addEventListener("click", () => {
+    current = (current - 1 + slides.length) % slides.length;
+    renderSlide(current);
+  });
+
+  document.getElementById("btn-down").addEventListener("click", () => {
+    current = (current + 1) % slides.length;
+    renderSlide(current);
+  });
+</script>
+</body>
+</html>
