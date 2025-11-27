@@ -47,19 +47,25 @@
 <!-- Top bar (簡單 Logo + 返回連結) -->
 <header class="border-b border-slate-800 bg-slate-950/80 backdrop-blur">
   <div class="mx-auto max-w-6xl px-4 py-3 flex items-center justify-between">
-    <div class="flex items-center gap-2">
+
+    <!-- 左 Logo → 點擊回首頁 -->
+    <a href="/" class="flex items-center gap-2 hover:opacity-80 transition">
       <div class="h-7 w-7 rounded-full bg-gradient-to-tr from-sky-500 to-fuchsia-500 flex items-center justify-center text-xs font-bold">
         Wu
       </div>
       <span class="text-sm font-semibold tracking-wide text-slate-100">
         eden-owo
       </span>
-    </div>
-    <a href="#projects" class="hidden sm:inline text-xs text-slate-400 hover:text-sky-300">
+    </a>
+
+    <!-- Back link（右側） -->
+    <a href="/project" class="hidden sm:inline text-xs text-slate-400 hover:text-sky-300">
       ← Back to projects
     </a>
+
   </div>
 </header>
+
 
 <main class="mx-auto max-w-6xl px-4 pb-16">
 
@@ -70,7 +76,7 @@
   <div class="rounded-xl border border-slate-800 overflow-hidden bg-slate-900/80 relative">
 
     <!-- 用 flex + 固定高度，左右 75% / 25% -->
-    <div class="flex h-[520px]">
+    <div class="flex h-[720px]">
 
       <!-- 左側 80%：沿用原本 preview 區 -->
       <div class="relative flex-[3] overflow-hidden">
@@ -78,7 +84,7 @@
         <img id="preview-image"
              src="./assets/slide1.png"
              alt="Escalator safety preview"
-             class="w-full h-full object-cover brightness-80" />
+             class="w-full h-full object-center brightness-80" />
 
         <!-- 右側上下箭頭 -->
         <div class="absolute right-5 top-1/2 -translate-y-1/2 flex flex-col gap-3">
@@ -88,7 +94,7 @@
       </div>
 
       <!-- 右側 25%：影片區，跟下方卡片同高 -->
-      <div class="flex-[1] border-l border-slate-800 bg-slate-950 flex items-center justify-center">
+      <div class="flex-[2] border-l border-slate-800 bg-slate-950 flex items-center justify-center">
         <video
           id="fall-video"
           src="./assets/result_falling_h264.mp4"   
