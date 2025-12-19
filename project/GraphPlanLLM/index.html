@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>GraphPlan-LLM | eden-owo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    body {
+      background: #020617;
+      /* slate-950 */
+      color: #e5e7eb;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .preview-image {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: brightness(0.6);
+    }
+
+    .arrow-btn {
+      width: 42px;
+      height: 42px;
+      backdrop-filter: blur(10px);
+      background: rgba(15, 23, 42, 0.85);
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+
+    .arrow-btn:hover {
+      background: rgba(30, 64, 175, 0.9);
+      border-color: rgba(56, 189, 248, 0.8);
+    }
+  </style>
+</head>
+
+<body class="min-h-screen">
+
+  <!-- Top bar (簡單 Logo + 返回連結) -->
+  <header class="border-b border-slate-800 bg-slate-950/80 backdrop-blur">
+    <div class="mx-auto max-w-6xl px-4 py-3 flex items-center justify-between">
+
+      <!-- 左 Logo → 點擊回首頁 -->
+      <a href="/" class="flex items-center gap-2 hover:opacity-80 transition">
+        <div
+          class="h-7 w-7 rounded-full bg-gradient-to-tr from-sky-500 to-fuchsia-500 flex items-center justify-center text-xs font-bold">
+          Wu
+        </div>
+        <span class="text-sm font-semibold tracking-wide text-slate-100">
+          eden-owo
+        </span>
+      </a>
+
+      <!-- Back link（右側） -->
+      <a href="/" class="hidden sm:inline text-xs text-slate-400 hover:text-sky-300">
+        ← Back to projects
+      </a>
+
+    </div>
+  </header>
+
+
+  <main class="mx-auto max-w-6xl px-4 pb-16">
+
+    <!-- ───────────────────────────
+       HERO PREVIEW + SLIDE ARROWS
+  ──────────────────────────── -->
+    <section class="pt-6 pb-10">
+      <div class="rounded-xl border border-slate-800 overflow-hidden bg-slate-900/80 relative">
+
+        <!-- 圖片預覽區 100% 寬度 -->
+        <div id="preview-container" class="relative h-[350px] overflow-hidden">
+          <img id="preview-image" src="./assets/GraphPlanLLM_1.png" alt="Escalator safety preview"
+            class="w-full h-full object-center brightness-80" />
+
+          <!-- 右側上下箭頭 -->
+          <div class="absolute right-5 top-1/2 -translate-y-1/2 flex flex-col gap-3">
+            <button id="btn-up" class="arrow-btn text-slate-100 text-lg" aria-label="上一個畫面">↑</button>
+            <button id="btn-down" class="arrow-btn text-slate-100 text-lg" aria-label="下一個畫面">↓</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────────────────────────
+       MAIN CONTENT（左說明 / 右卡片）
+  ──────────────────────────── -->
+    <section class="grid gap-10 lg:grid-cols-[minmax(0,1.4fr),minmax(260px,0.9fr)] items-start">
+      <!-- 左側：痛點 + 簡要說明 -->
+      <div class="space-y-6">
+        <div class="space-y-2">
+          <h1 class="text-3xl font-semibold text-slate-50">
+            GraphPlan-LLM
+          </h1>
+          <h2 class="text-base font-semibold text-slate-50">語言模型輔助圖結構規劃框架（Scene Graph + LLM）</h2>
+          <ul class="list-disc pl-5 text-sm text-slate-300 space-y-1">
+            <li>自然語言 Prompt 快速生成結構化平面場景規劃</li>
+            <li>Scene Graph 管理空間關係，確保設計合理</li>
+            <li>自動佈局演算法 → 根據約束條件優化物件位置與尺寸</li>
+            <li>視覺化輸出 → 直接生成可視化平面圖，減少手動繪製時間</li>
+          </ul>
+        </div>
+
+        <div class="space-y-3">
+          <h2 class="text-base font-semibold text-slate-50">專案背景</h2>
+          <div class="text-sm text-slate-300 space-y-1">
+            <p>建築設計師畫平面圖十分耗時，空間規劃和調整需要花費大量時間。</p>
+            <p>雖然 CAD 很精確，但每個元素都要手動畫，又慢又繁瑣。</p>
+            <p>設計師藉由
+              <span class="font-semibold text-sky-300">GraphPlan-LLM </span>
+              輸入文字需求，系統自動生成平面圖，大幅節省初期設計的時間。
+            </p>
+          </div>
+        </div>
+
+        <div class="space-y-3">
+          <h2 class="text-base font-semibold text-slate-50">核心挑戰</h2>
+          <ul class="list-disc pl-5 text-sm text-slate-300 space-y-1">
+            <li>如何確保 LLM 生成的房間節點合理分布在用戶提供的格局邊界內</li>
+            <li>房間位置需要貼合牆壁，並避免阻擋門口等關鍵區域</li>
+            <li>相鄰房間的邊界需要對齊，消除縫隙並創建共享牆壁</li>
+          </ul>
+        </div>
+
+        <div class="space-y-3">
+          <h2 class="text-base font-semibold text-slate-50">技術架構：多階段對齊與優化流程</h2>
+          <ul class="grid gap-3 text-sm text-slate-300 sm:grid-cols-2">
+            <li class="rounded-xl border border-slate-800 bg-slate-900/70 px-4 py-3">
+              <div class="text-s font-semibold text-emerald-300 tracking-wide mb-1">
+                1️⃣ LLM 圖結構生成
+              </div>
+              LLM 生成房間類型和連接關係（如「客廳-主臥」），建立空間拓撲圖。
+            </li>
+            <li class="rounded-xl border border-slate-800 bg-slate-900/70 px-4 py-3">
+              <div class="text-s font-semibold text-sky-300 tracking-wide mb-1">
+                2️⃣ 力導向佈局演算法
+              </div>
+              使用 Fruchterman-Reingold 演算法模擬排斥力（避免重疊）、吸引力（相鄰房間靠近）與邊界約束力，經 100 次迭代達到物理平衡。
+            </li>
+            <li class="rounded-xl border border-slate-800 bg-slate-900/70 px-4 py-3">
+              <div class="text-s font-semibold text-fuchsia-300 tracking-wide mb-1">
+                3️⃣ 深度學習模型優化
+              </div>
+              神經網路模型根據節點位置、房間類型和邊界約束，生成符合建築規範的房間框（bounding boxes）。
+            </li>
+            <li class="rounded-xl border border-slate-800 bg-slate-900/70 px-4 py-3">
+              <div class="text-s font-semibold text-amber-300 tracking-wide mb-1">
+                4️⃣ 幾何對齊與正規化
+              </div>
+              邊界吸附（< 18 單位）、門口避讓（Shapely 碰撞檢測）、鄰居對齊（消除縫隙）、生成最終多邊形。 </li>
+          </ul>
+        </div>
+
+
+      </div>
+
+      <div class="rounded-2xl bg-slate-900/60 border border-slate-800 p-6 space-y-6">
+
+        <div class="text-xs tracking-widest text-slate-400 mb-1">PROJECT</div>
+
+        <div>
+          <h3 class="text-xl font-semibold text-slate-50">GraphPlan-LLM</h3>
+          <p class="text-sm text-slate-300 mt-1 leading-relaxed">
+            結合
+            <span class="font-semibold text-sky-300">LLM 語義解析、GNN 圖神經網路、力導向演算法</span>
+            與幾何約束優化，實現 Prompt-to-Floorplan 自動化生成。
+          </p>
+        </div>
+
+        <!-- Demo 網頁 -->
+        <div class="flex justify-center">
+          <a href="https://eden-owo.me/home_wizard_upload" target="_blank"
+            class="inline-block px-8 py-3 rounded-full bg-gradient-to-r from-cyan-400 via-blue-400 to-pink-400 text-slate-900 text-sm font-bold hover:shadow-2xl hover:scale-105 transition-all duration-300">
+            GraphPlan-LLM Demo
+          </a>
+        </div>
+
+        <!-- 技術標籤 -->
+        <div class="flex flex-wrap gap-2 pt-2">
+          <span class="px-3 py-1 rounded-lg bg-slate-800 text-slate-300 text-xs">LLM</span>
+          <span class="px-3 py-1 rounded-lg bg-slate-800 text-slate-300 text-xs">GNN</span>
+          <span class="px-3 py-1 rounded-lg bg-slate-800 text-slate-300 text-xs">PyTorch</span>
+          <span class="px-3 py-1 rounded-lg bg-slate-800 text-slate-300 text-xs">Force-Directed</span>
+          <span class="px-3 py-1 rounded-lg bg-slate-800 text-slate-300 text-xs">Shapely</span>
+          <span class="px-3 py-1 rounded-lg bg-slate-800 text-slate-300 text-xs">Geometric Align</span>
+          <span class="px-3 py-1 rounded-lg bg-slate-800 text-slate-300 text-xs">Django</span>
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <script>
+    // ──────────────────────────────
+    // 多張預覽圖 + 文案，使用上下箭頭切換
+    // ──────────────────────────────
+    const slides = [
+      {
+        src: "./assets/GraphPlanLLM_1.png",
+      },
+      {
+        src: "./assets/GraphPlanLLM_2_1.png",
+      },
+      {
+        src: "./assets/GraphPlanLLM_3.png",
+      },
+    ];
+
+    let current = 0;
+    const imgEl = document.getElementById("preview-image");
+    const containerEl = document.getElementById("preview-container");
+    const titleEl = document.getElementById("preview-title");
+    const captionEl = document.getElementById("preview-caption");
+
+    function renderSlide(index) {
+      const s = slides[index];
+      imgEl.src = s.src;
+      imgEl.alt = s.title;
+      if (titleEl) titleEl.textContent = s.title;
+      if (captionEl) captionEl.textContent = s.caption;
+
+      // 第三張圖片（index 2）改為 900px 高度
+      if (index === 1 || index === 2) {
+        containerEl.className = "relative h-[600px] overflow-hidden";
+      } else {
+        containerEl.className = "relative h-[350px] overflow-hidden";
+      }
+    }
+
+    document.getElementById("btn-up").addEventListener("click", () => {
+      current = (current - 1 + slides.length) % slides.length;
+      renderSlide(current);
+    });
+
+    document.getElementById("btn-down").addEventListener("click", () => {
+      current = (current + 1) % slides.length;
+      renderSlide(current);
+    });
+  </script>
+</body>
+
+</html>
