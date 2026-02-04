@@ -6,28 +6,116 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Eden | Portfolio</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+  </style>
 </head>
 
-<body class="bg-slate-950 text-slate-200">
-  <div class="max-w-4xl mx-auto py-20 text-center space-y-6">
+<body class="bg-[#0D1117] text-slate-200 min-h-screen">
 
-    <h1 class="text-4xl font-bold">Eden Portfolio</h1>
-    <p class="text-slate-400">
-      Edge AI / Vision Engineer | DeepStream · YOLO · TensorRT · RTSP Pipeline
-    </p>
+  <div class="max-w-6xl mx-auto px-4 py-20">
 
-    <div class="pt-10">
-      <a href="./project/escalator-damage-detector/"
-        class="px-6 py-3 rounded-xl bg-gradient-to-r from-sky-400 to-fuchsia-400 text-slate-900 font-semibold">
-        Escalator Damage Detector
-      </a>
+    <!-- Profile / Header Section -->
+    <div class="text-center space-y-4 mb-20">
+      <h1 class="text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-emerald-400">
+        Eden Portfolio
+      </h1>
+      <p class="text-slate-400 text-lg max-w-2xl mx-auto">
+        Edge AI / Vision Engineer | DeepStream · YOLO · TensorRT · RTSP Pipeline
+      </p>
     </div>
 
-    <div class="pt-10">
-      <a href="./project/GraphPlanLLM/"
-        class="px-6 py-3 rounded-xl bg-gradient-to-r from-sky-400 to-fuchsia-400 text-slate-900 font-semibold">
-        GraphPlan-LLM
+    <!-- Featured Projects Header -->
+    <div class="text-center mb-12">
+      <h2
+        class="text-3xl font-bold text-slate-100 inline-block relative after:content-[''] after:block after:h-1 after:w-16 after:bg-slate-700 after:mx-auto after:mt-4">
+        Featured Projects
+      </h2>
+    </div>
+
+    <!-- Projects Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+      <!-- Card 1: Escalator Damage Detector -->
+      <a href="./project/escalator-damage-detector/"
+        class="group block bg-[#161B22] rounded-xl overflow-hidden border border-slate-800 hover:border-blue-500/50 transition-all duration-300 hover:shadow-xl hover:shadow-blue-900/10">
+        <div class="aspect-video w-full overflow-hidden bg-slate-900">
+          <img src="./project/escalator-damage-detector/assets/pose2.jpg" alt="Escalator Damage Detector"
+            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+        </div>
+
+        <div class="p-6 space-y-4">
+          <h3 class="text-xl font-bold text-blue-400 group-hover:text-blue-300 transition-colors">
+            Escalator Damage Detector
+          </h3>
+
+          <p class="text-slate-400 text-sm leading-relaxed line-clamp-3">
+            Real-time deep learning pipeline for detecting escalator damages using DeepStream and YOLO. Optimized for
+            edge devices.
+          </p>
+
+          <div class="flex flex-wrap gap-2 pt-2">
+            <span
+              class="px-3 py-1 text-xs font-medium rounded-full bg-slate-800 text-blue-300 border border-slate-700">DeepStream</span>
+            <span
+              class="px-3 py-1 text-xs font-medium rounded-full bg-slate-800 text-blue-300 border border-slate-700">YOLO</span>
+            <span
+              class="px-3 py-1 text-xs font-medium rounded-full bg-slate-800 text-blue-300 border border-slate-700">Edge
+              AI</span>
+          </div>
+        </div>
       </a>
+
+      <!-- Card 2: GraphPlan-LLM -->
+      <a href="./project/GraphPlanLLM/"
+        class="group block bg-[#161B22] rounded-xl overflow-hidden border border-slate-800 hover:border-blue-500/50 transition-all duration-300 hover:shadow-xl hover:shadow-blue-900/10">
+        <div class="aspect-video w-full overflow-hidden bg-slate-900">
+          <img src="./project/GraphPlanLLM/assets/GraphPlanLLM_4.png" alt="GraphPlan-LLM"
+            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+        </div>
+
+        <div class="p-6 space-y-4">
+          <h3 class="text-xl font-bold text-blue-400 group-hover:text-blue-300 transition-colors">
+            GraphPlan-LLM
+          </h3>
+
+          <p class="text-slate-400 text-sm leading-relaxed line-clamp-3">
+            AI-assisted floor plan generation tool using Large Language Models to interpret architectural requirements
+            and generate layouts.
+          </p>
+
+          <div class="flex flex-wrap gap-2 pt-2">
+            <span
+              class="px-3 py-1 text-xs font-medium rounded-full bg-slate-800 text-blue-300 border border-slate-700">LLM</span>
+            <span
+              class="px-3 py-1 text-xs font-medium rounded-full bg-slate-800 text-blue-300 border border-slate-700">Generative
+              AI</span>
+            <span
+              class="px-3 py-1 text-xs font-medium rounded-full bg-slate-800 text-blue-300 border border-slate-700">Python</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Placeholder Card (Optional, for visual balance if needed, or left empty) -->
+      <!-- Added a "Coming Soon" card to fill the grid nicely like the reference image which had 3 cards -->
+      <div class="group block bg-[#161B22] rounded-xl overflow-hidden border border-slate-800 opacity-60">
+        <div class="aspect-video w-full bg-slate-900 flex items-center justify-center">
+          <span class="text-slate-600 text-4xl">?</span>
+        </div>
+
+        <div class="p-6 space-y-4">
+          <h3 class="text-xl font-bold text-slate-600">
+            Coming Soon
+          </h3>
+          <p class="text-slate-600 text-sm">
+            More projects under development.
+          </p>
+        </div>
+      </div>
+
     </div>
 
   </div>
